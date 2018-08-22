@@ -1,0 +1,5 @@
+scrapy
+requests
+scrapy_crawlera
+MySQL-python
+scrapy-random-useragent
