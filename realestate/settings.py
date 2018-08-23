@@ -62,7 +62,7 @@ DOWNLOADER_MIDDLEWARES = {
 }
 USER_AGENT_LIST = "user-agents.txt"
 CRAWLERA_ENABLED = True
-CRAWLERA_APIKEY = '03f0ecc5943149e4b3398a1675691dc9'
+CRAWLERA_APIKEY = 'babc46c86ffa420baa21ebef6b7aa146'
 # Enable or disable extensions
 # See https://doc.scrapy.org/en/latest/topics/extensions.html
 #EXTENSIONS = {
