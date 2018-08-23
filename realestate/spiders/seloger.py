@@ -43,6 +43,8 @@ class selogerSpider(Spider):
     count = 0
     pageIndex = 1
 
+    handle_httpstatus_list = [407]
+
     # sys.setdefaultencoding('utf-8')
 
    # # //////// angel headers and cookies////////////
