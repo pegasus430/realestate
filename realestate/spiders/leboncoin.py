@@ -17,7 +17,8 @@ def RepresentsInt(s):
 
 class selogerSpider(Spider):
     name = "leboncoin"
-    start_url = ['https://www.leboncoin.fr/recherche/?category=10&region=12&departement=75&real_estate_type=1,2', 'https://www.leboncoin.fr/colocations/offres/ile_de_france/paris/']
+    start_url = ['https://www.leboncoin.fr/recherche/?category=10&region=12&departement=75&real_estate_type=1,2',
+                 'https://www.leboncoin.fr/colocations/offres/ile_de_france/paris/']
     domain1 = 'https://www.leboncoin.fr'
 
     use_selenium = False

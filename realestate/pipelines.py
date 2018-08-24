@@ -12,8 +12,8 @@ import shutil
 class RealestatePipeline(object):
     def __init__(self):
         #####-------------------- server side ------------------------- ####################
-        self.conn = MySQLdb.connect(host='127.0.0.1', user='root', passwd='vXZ3aR6DyhBbcENA', db='realstatedb', charset='utf8')
-        # self.conn = MySQLdb.connect(host='127.0.0.1', user='root', passwd='root', db='realstatedb',
+        self.conn = MySQLdb.connect(host='127.0.0.1', user='root', passwd='root', db='realstatedb', charset='utf8')
+        # self.conn = MySQLdb.connect(host='127.0.0.1', user='root', passwd='vXZ3aR6DyhBbcENA', db='realstatedb',
         #                             charset='utf8')
         #####------------------------------------------------------------#############################
 

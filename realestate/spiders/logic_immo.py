@@ -18,7 +18,8 @@ def RepresentsInt(s):
 
 class selogerSpider(Spider):
     name = "logic_immo"
-    start_url = 'http://www.logic-immo.com/location-immobilier-paris-75,100_1/options/groupprptypesids=1,2,6,7,12'
+    start_url = 'http://www.logic-immo.com/location-immobilier-paris-75,100_1' \
+                '/options/groupprptypesids=1,2,6,7,12/order=update_date_desc'
     domain1 = 'http://www.logic-immo.com'
 
     use_selenium = False
@@ -27,7 +28,8 @@ class selogerSpider(Spider):
     totalpage= None
     custom_settings = {
 	    # 'CRAWLERA_ENABLED' : False,
-        'USER_AGENT': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36',
+        'USER_AGENT': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                      ' (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36',
         "DOWNLOADER_MIDDLEWARES":{
             # 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': 400,
             'scrapy_crawlera.CrawleraMiddleware': 610,
