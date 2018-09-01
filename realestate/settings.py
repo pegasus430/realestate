@@ -53,9 +53,9 @@ COOKIES_ENABLED = False
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
-   # 'realestate.middlewares.RealestateDownloaderMiddleware': 543,
-   #  'scrapy.downloadermiddlewares.retry.RetryMiddleware': 550,
-   #  'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware': 350
+   'realestate.middlewares.RealestateDownloaderMiddleware': 543,
+    'scrapy.downloadermiddlewares.retry.RetryMiddleware': 550,
+    'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware': 350
    'scrapy_crawlera.CrawleraMiddleware': 610,
    'scrapy.contrib.downloadermiddleware.useragent.UserAgentMiddleware': None,
    'random_useragent.RandomUserAgentMiddleware': 400
