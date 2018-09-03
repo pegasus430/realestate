@@ -31,7 +31,7 @@ class selogerSpider(Spider):
         'USER_AGENT': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
                       ' (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36',
         "DOWNLOADER_MIDDLEWARES":{
-            # 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': 400,
+            'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': 400,
             'scrapy_crawlera.CrawleraMiddleware': 610,
             'random_useragent.RandomUserAgentMiddleware': None
         }
@@ -39,30 +39,30 @@ class selogerSpider(Spider):
 
    # //////// angel headers and cookies////////////
     # --------------- Get list of proxy-----------------------#
-    # proxy_text = requests.get('https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list.txt').text
-    # list_proxy_temp = proxy_text.split('\n')
-    # list_proxy = []
-    # for line in list_proxy_temp:
-    #     if line.strip() !='' and (line.strip()[-1] == '+' or line.strip()[-1] == '-'):
-    #         ip = line.strip().split(':')[0].replace(' ', '')
-    #         port = line.split(':')[-1].split(' ')[0]
-    #         list_proxy.append('http://'+ip+':'+port)
+    proxy_text = requests.get('https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list.txt').text
+    list_proxy_temp = proxy_text.split('\n')
+    list_proxy = []
+    for line in list_proxy_temp:
+        if line.strip() !='' and (line.strip()[-1] == '+' or line.strip()[-1] == '-'):
+            ip = line.strip().split(':')[0].replace(' ', '')
+            port = line.split(':')[-1].split(' ')[0]
+            list_proxy.append('http://'+ip+':'+port)
 
     def start_requests(self):
         # proxy = random.choice(self.list_proxy)
         yield Request(self.start_url, callback= self.parse, meta={"next_count": 1})
 
-    # def errCall(self, response):
-    #     ban_proxy = response.request.meta['proxy']
-    #     self.list_proxy.remove(ban_proxy)
-    #     proxy = random.choice(self.list_proxy)
-    #     # response.request.meta['proxy'] = proxy
-    #     print ('err proxy: ' + proxy)
-    #     yield Request(response.request.url,
-    #                   callback=self.parse,
-    #                   meta={'proxy': proxy},
-    #                   dont_filter=True,
-    #                   errback=self.errCall)
+    def errCall(self, response):
+        ban_proxy = response.request.meta['proxy']
+        self.list_proxy.remove(ban_proxy)
+        proxy = random.choice(self.list_proxy)
+        # response.request.meta['proxy'] = proxy
+        print ('err proxy: ' + proxy)
+        yield Request(response.request.url,
+                      callback=self.parse,
+                      meta={'proxy': proxy},
+                      dont_filter=True,
+                      errback=self.errCall)
 
     def parse(self, response):
         urls = response.xpath('//p[@class="offer-type"]/a/@href').extract()
