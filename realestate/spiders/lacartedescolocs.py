@@ -38,14 +38,15 @@ class selogerSpider(Spider):
             list_proxy.append('http://'+ip+':'+port)
 
     def start_requests(self):
-        # proxy = random.choice(self.list_proxy)
+        proxy = random.choice(self.list_proxy)
         yield Request(self.start_json_url, callback= self.parse, meta={"next_count": 1})
 
     def errCall(self, response):
         ban_proxy = response.request.meta['proxy']
         self.list_proxy.remove(ban_proxy)
         proxy = random.choice(self.list_proxy)
-        # response.request.meta['proxy'] = proxy
+        response.request.meta['proxy'] = proxy
+
         print ('err proxy: ' + proxy)
         yield Request(response.request.url,
                       callback=self.parse,
@@ -86,7 +87,7 @@ class selogerSpider(Spider):
             address_list.append(json_data['address_street'])
         item['address'] = ' '.join(address_list)
 
-        available_from = json_data['lodging_availability_string']
+        # available_from = json_data['lodging_availability_string']
 
         pieces = re.findall('[\d.,]+', json_data['lodging_size_string'])
         if pieces:

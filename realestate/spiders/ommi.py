@@ -14,25 +14,26 @@ def RepresentsInt(s):
         return True
     except ValueError:
         return False
-# def download(url, destfilename, temppath):
-#     filename = temppath+'tmp'
-#     if not os.path.exists(destfilename):
-#         print "Downloading from {} to {}...".format(url, filename)
-#         try:
-#             r = requests.get(url, stream=True)
-#             with open(filename, 'wb') as f:
-#                 for chunk in r.iter_content(chunk_size=1024):
-#                     if chunk:
-#                         f.write(chunk)
-#                         f.flush()
-#
-#             with Image.open(filename) as image:
-#                 cover = resizeimage.resize_cover(image, [640, 430])
-#                 cover.save(destfilename, image.format)
-#             os.remove(filename)
-#         except Exception as e:
-#             print(e)
-#             print "Error downloading file."
+
+def download(url, destfilename, temppath):
+    filename = temppath+'tmp'
+    if not os.path.exists(destfilename):
+        print "Downloading from {} to {}...".format(url, filename)
+        try:
+            r = requests.get(url, stream=True)
+            with open(filename, 'wb') as f:
+                for chunk in r.iter_content(chunk_size=1024):
+                    if chunk:
+                        f.write(chunk)
+                        f.flush()
+
+            with Image.open(filename) as image:
+                cover = resizeimage.resize_cover(image, [640, 430])
+                cover.save(destfilename, image.format)
+            os.remove(filename)
+        except Exception as e:
+            print(e)
+            print "Error downloading file."
 
 class ommiSpider(Spider):
     name = "ommi"
