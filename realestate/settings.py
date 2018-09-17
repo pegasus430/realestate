@@ -55,19 +55,20 @@ COOKIES_ENABLED = False
 DOWNLOADER_MIDDLEWARES = {
    'realestate.middlewares.RealestateDownloaderMiddleware': 543,
    'scrapy.downloadermiddlewares.retry.RetryMiddleware': 550,
-   # 'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware': 350
-   # 'scrapy_crawlera.CrawleraMiddleware': 610,
-   # 'scrapy.contrib.downloadermiddleware.useragent.UserAgentMiddleware': None,
+   'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware': 350,
+   'scrapy_crawlera.CrawleraMiddleware': 610,
+   'scrapy.contrib.downloadermiddleware.useragent.UserAgentMiddleware': None,
    'random_useragent.RandomUserAgentMiddleware': 400
 }
 USER_AGENT_LIST = "user-agents.txt"
 CRAWLERA_ENABLED = True
 CRAWLERA_APIKEY = 'babc46c86ffa420baa21ebef6b7aa146'
+
 # Enable or disable extensions
 # See https://doc.scrapy.org/en/latest/topics/extensions.html
-#EXTENSIONS = {
-#    'scrapy.extensions.telnet.TelnetConsole': None,
-#}
+EXTENSIONS = {
+   'scrapy.extensions.telnet.TelnetConsole': None,
+}
 
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
