@@ -41,17 +41,17 @@ class selogerSpider(Spider):
         # proxy = random.choice(self.list_proxy)
         yield Request(self.start_url, callback= self.parse, meta={"next_count": 1})
 
-    # def errCall(self, response):
-    #     ban_proxy = response.request.meta['proxy']
-    #     self.list_proxy.remove(ban_proxy)
-    #     proxy = random.choice(self.list_proxy)
-    #     # response.request.meta['proxy'] = proxy
-    #     print ('err proxy: ' + proxy)
-    #     yield Request(response.request.url,
-    #                   callback=self.parse,
-    #                   meta={'proxy': proxy},
-    #                   dont_filter=True,
-    #                   errback=self.errCall)
+    def errCall(self, response):
+        ban_proxy = response.request.meta['proxy']
+        self.list_proxy.remove(ban_proxy)
+        proxy = random.choice(self.list_proxy)
+        # response.request.meta['proxy'] = proxy
+        print ('err proxy: ' + proxy)
+        yield Request(response.request.url,
+                      callback=self.parse,
+                      meta={'proxy': proxy},
+                      dont_filter=True,
+                      errback=self.errCall)
 
     def parse(self, response):
         urls = response.xpath('//div[@class="search-list-item"]/div/a/@href').extract()
