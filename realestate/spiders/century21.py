@@ -26,32 +26,32 @@ class selogerSpider(Spider):
 
     # sys.setdefaultencoding('utf-8')
 
-   # //////// angel headers and cookies////////////
+    # //////// angel headers and cookies////////////
     # --------------- Get list of proxy-----------------------#
-    # proxy_text = requests.get('https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list.txt').text
-    # list_proxy_temp = proxy_text.split('\n')
-    # list_proxy = []
-    # for line in list_proxy_temp:
-    #     if line.strip() !='' and (line.strip()[-1] == '+' or line.strip()[-1] == '-'):
-    #         ip = line.strip().split(':')[0].replace(' ', '')
-    #         port = line.split(':')[-1].split(' ')[0]
-    #         list_proxy.append('http://'+ip+':'+port)
+    proxy_text = requests.get('https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list.txt').text
+    list_proxy_temp = proxy_text.split('\n')
+    list_proxy = []
+    for line in list_proxy_temp:
+        if line.strip() !='' and (line.strip()[-1] == '+' or line.strip()[-1] == '-'):
+            ip = line.strip().split(':')[0].replace(' ', '')
+            port = line.split(':')[-1].split(' ')[0]
+            list_proxy.append('http://'+ip+':'+port)
 
     def start_requests(self):
-        # proxy = random.choice(self.list_proxy)
+        proxy = random.choice(self.list_proxy)
         yield Request(self.start_url, callback= self.parse, meta={"next_count": 1})
 
-    # def errCall(self, response):
-    #     ban_proxy = response.request.meta['proxy']
-    #     self.list_proxy.remove(ban_proxy)
-    #     proxy = random.choice(self.list_proxy)
-    #     # response.request.meta['proxy'] = proxy
-    #     print ('err proxy: ' + proxy)
-    #     yield Request(response.request.url,
-    #                   callback=self.parse,
-    #                   meta={'proxy': proxy},
-    #                   dont_filter=True,
-    #                   errback=self.errCall)
+    def errCall(self, response):
+        ban_proxy = response.request.meta['proxy']
+        self.list_proxy.remove(ban_proxy)
+        proxy = random.choice(self.list_proxy)
+        response.request.meta['proxy'] = proxy
+        print ('err proxy: ' + proxy)
+        yield Request(response.request.url,
+                      callback=self.parse,
+                      meta={'proxy': proxy},
+                      dont_filter=True,
+                      errback=self.errCall)
 
     def parse(self, response):
         urls = response.xpath('//ul[@class="annoncesListeBien"]/li//div[@class="zone-photo-exclu"]/a/@href').extract()
@@ -120,11 +120,11 @@ class selogerSpider(Spider):
                     if pieces:
                         pieces = pieces.strip()
                         item['pieces'] = pieces
-                # elif 'Type d\'appartement' in spans_strs:
-                #     pieces = td.xpath('./text()').extract_first()
-                #     if pieces:
-                #         pieces = pieces.strip()
-                #         item['pieces'] = pieces
+                elif 'Type d\'appartement' in spans_strs:
+                    pieces = td.xpath('./text()').extract_first()
+                    if pieces:
+                        pieces = pieces.strip()
+                        item['pieces'] = pieces
                 elif 'Surface totale' in spans_strs:
                     area = td.xpath('./text()').re(r'[\d.,]+')
                     if area:
