@@ -18,15 +18,15 @@ def RepresentsInt(s):
 class selogerSpider(Spider):
     name = "lacartedescolocs"
     start_url = 'https://www.lacartedescolocs.fr/colocations/ile-de-france/paris'
-    # start_json_url = 'https://www.lacartedescolocs.fr/listings/update_map_results?country=fr&filters%5Blocation%5D=Paris&filters%5Brent_max%5D=2000&filters%5BsortBy%5D=edited_at+DESC&viewport%5BneLat%5D=48.91453&viewport%5BneLon%5D=2.50104&viewport%5BswLat%5D=48.80317&viewport%5BswLon%5D=2.19308&viewport%5Bzoom%5D=12'
-    start_json_url = 'https://www.lacartedescolocs.fr/listings/update_map_results?country=fr&filters%5Bdate_min%5D=-60&filters%5Blocation%5D=Paris&filters%5Brent_max%5D=2000&filters%5BsortBy%5D=edited_at+DESC&viewport%5BneLat%5D=48.93020&viewport%5BneLon%5D=2.51821&viewport%5BswLat%5D=48.78745&viewport%5BswLon%5D=2.17591&viewport%5Bzoom%5D=12'
+    start_json_url = 'https://www.lacartedescolocs.fr/listings/update_map_results?country=fr&filters%5Blocation%5D=Paris&filters%5Brent_max%5D=2000&filters%5BsortBy%5D=edited_at+DESC&viewport%5BneLat%5D=48.91453&viewport%5BneLon%5D=2.50104&viewport%5BswLat%5D=48.80317&viewport%5BswLon%5D=2.19308&viewport%5Bzoom%5D=12'
+    # start_json_url = 'https://www.lacartedescolocs.fr/listings/update_map_results?country=fr&filters%5Bdate_min%5D=-60&filters%5Blocation%5D=Paris&filters%5Brent_max%5D=2000&filters%5BsortBy%5D=edited_at+DESC&viewport%5BneLat%5D=48.93020&viewport%5BneLon%5D=2.51821&viewport%5BswLat%5D=48.78745&viewport%5BswLon%5D=2.17591&viewport%5Bzoom%5D=12'
     domain1 = 'https://www.lacartedescolocs.fr'
 
     use_selenium = False
     count = 0
     pageIndex = 1
 
-    # sys.setdefaultencoding('utf-8')
+    sys.setdefaultencoding('utf-8')
 
     proxy_text = requests.get('https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list.txt').text
     list_proxy_temp = proxy_text.split('\n')
