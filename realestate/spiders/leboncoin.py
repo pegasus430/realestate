@@ -28,29 +28,29 @@ class selogerSpider(Spider):
     # sys.setdefaultencoding('utf-8')
 
    # //////// angel headers and cookies////////////
-   #  headers = {
-   #              'Cache-Control': 'max-age=0',
-   #              'upgrade-insecure-requests': '1',
-   #              'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36',
-   #              'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-   #              'accept-encoding': 'gzip, deflate, br',
-   #              'accept-language': 'en-US,en;q=0.9',
-   #              'upgrade-insecure-requests': '1',
-   #              'referer': 'https://www.tradecarview.com/my/favoritelist.aspx?list=1&sort=0&ps=25&&pn=0'
-   #          }
+    headers = {
+                'Cache-Control': 'max-age=0',
+                'upgrade-insecure-requests': '1',
+                'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36',
+                'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+                'accept-encoding': 'gzip, deflate, br',
+                'accept-language': 'en-US,en;q=0.9',
+                'upgrade-insecure-requests': '1',
+                'referer': 'https://www.tradecarview.com/my/favoritelist.aspx?list=1&sort=0&ps=25&&pn=0'
+            }
 
     # --------------- Get list of proxy-----------------------#
-    # proxy_text = requests.get('https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list.txt').text
-    # list_proxy_temp = proxy_text.split('\n')
-    # list_proxy = []
-    # for line in list_proxy_temp:
-    #     if line.strip() !='' and (line.strip()[-1] == '+' or line.strip()[-1] == '-'):
-    #         ip = line.strip().split(':')[0].replace(' ', '')
-    #         port = line.split(':')[-1].split(' ')[0]
-    #         list_proxy.append('http://'+ip+':'+port)
+    proxy_text = requests.get('https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list.txt').text
+    list_proxy_temp = proxy_text.split('\n')
+    list_proxy = []
+    for line in list_proxy_temp:
+        if line.strip() !='' and (line.strip()[-1] == '+' or line.strip()[-1] == '-'):
+            ip = line.strip().split(':')[0].replace(' ', '')
+            port = line.split(':')[-1].split(' ')[0]
+            list_proxy.append('http://'+ip+':'+port)
 
     def start_requests(self):
-        # proxy = random.choice(self.list_proxy)
+        proxy = random.choice(self.list_proxy)
         for url in self.start_url:
             yield Request(url, callback= self.parse, meta={"main_url": url, "next_count": 1})
 
