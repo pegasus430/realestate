@@ -28,14 +28,14 @@ class selogerSpider(Spider):
 
     # //////// angel headers and cookies////////////
     # --------------- Get list of proxy-----------------------#
-    proxy_text = requests.get('https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list.txt').text
-    list_proxy_temp = proxy_text.split('\n')
-    list_proxy = []
-    for line in list_proxy_temp:
-        if line.strip() !='' and (line.strip()[-1] == '+' or line.strip()[-1] == '-'):
-            ip = line.strip().split(':')[0].replace(' ', '')
-            port = line.split(':')[-1].split(' ')[0]
-            list_proxy.append('http://'+ip+':'+port)
+    # proxy_text = requests.get('https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list.txt').text
+    # list_proxy_temp = proxy_text.split('\n')
+    # list_proxy = []
+    # for line in list_proxy_temp:
+    #     if line.strip() !='' and (line.strip()[-1] == '+' or line.strip()[-1] == '-'):
+    #         ip = line.strip().split(':')[0].replace(' ', '')
+    #         port = line.split(':')[-1].split(' ')[0]
+    #         list_proxy.append('http://'+ip+':'+port)
 
     def start_requests(self):
         proxy = random.choice(self.list_proxy)
