@@ -6,10 +6,10 @@ import os, sys
 
 def _crawl(spider_name_params=None):
 	if spider_name_params:
-		# print (spider_name_params)
+		print (spider_name_params)
 		print (">>>>> Starting {} spider".format(spider_name_params))
-		# file_name = 'output/{}_result.csv'.format(spider_name_params)
-		# os.remove(file_name)
+		file_name = 'output/{}_result.csv'.format(spider_name_params)
+		os.remove(file_name)
 		command = 'scrapy crawl {}'.format(spider_name_params)
 
 		os.system(command)
