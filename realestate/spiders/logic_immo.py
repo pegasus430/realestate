@@ -37,32 +37,30 @@ class selogerSpider(Spider):
         }
 	}
 
-   # //////// angel headers and cookies////////////
-    # --------------- Get list of proxy-----------------------#
-    # proxy_text = requests.get('https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list.txt').text
-    # list_proxy_temp = proxy_text.split('\n')
-    # list_proxy = []
-    # for line in list_proxy_temp:
-    #     if line.strip() !='' and (line.strip()[-1] == '+' or line.strip()[-1] == '-'):
-    #         ip = line.strip().split(':')[0].replace(' ', '')
-    #         port = line.split(':')[-1].split(' ')[0]
-    #         list_proxy.append('http://'+ip+':'+port)
+    proxy_text = requests.get('https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list.txt').text
+    list_proxy_temp = proxy_text.split('\n')
+    list_proxy = []
+    for line in list_proxy_temp:
+        if line.strip() !='' and (line.strip()[-1] == '+' or line.strip()[-1] == '-'):
+            ip = line.strip().split(':')[0].replace(' ', '')
+            port = line.split(':')[-1].split(' ')[0]
+            list_proxy.append('http://'+ip+':'+port)
 
     def start_requests(self):
         # proxy = random.choice(self.list_proxy)
         yield Request(self.start_url, callback= self.parse, meta={"next_count": 1})
 
-    # def errCall(self, response):
-    #     ban_proxy = response.request.meta['proxy']
-    #     self.list_proxy.remove(ban_proxy)
-    #     proxy = random.choice(self.list_proxy)
-    #     # response.request.meta['proxy'] = proxy
-    #     print ('err proxy: ' + proxy)
-    #     yield Request(response.request.url,
-    #                   callback=self.parse,
-    #                   meta={'proxy': proxy},
-    #                   dont_filter=True,
-    #                   errback=self.errCall)
+    def errCall(self, response):
+        ban_proxy = response.request.meta['proxy']
+        self.list_proxy.remove(ban_proxy)
+        proxy = random.choice(self.list_proxy)
+        # response.request.meta['proxy'] = proxy
+        print ('err proxy: ' + proxy)
+        yield Request(response.request.url,
+                      callback=self.parse,
+                      meta={'proxy': proxy},
+                      dont_filter=True,
+                      errback=self.errCall)
 
     def parse(self, response):
         urls = response.xpath('//p[@class="offer-type"]/a/@href').extract()
@@ -72,6 +70,7 @@ class selogerSpider(Spider):
                 yield Request(url, callback=self.final_parse)
                 # yield Request('http://www.logic-immo.com/detail-location-b0673f77-1638-71da-8ae1-03cce29d8cdc.htm', self.final_parse)
                 # break
+
             ##################_---------------- for test ----------------------##############
             # yield Request(response.urljoin(urls[0]), callback= self.final_parse, dont_filter=True)
             ###################################################################################
@@ -182,12 +181,12 @@ class selogerSpider(Spider):
                     total_floors = td.xpath('./div[2]/text()').extract_first()
                     if total_floors:
                         total_floors = total_floors
-                        # item['toilettes'] = total_floors
+                        item['toilettes'] = total_floors
                 elif 'Nombre de salle de bain' in spans_strs:
                     bath_rooms = td.xpath('./div[2]/text()').extract_first()
                     if bath_rooms:
                         bath_rooms = bath_rooms
-                        # item['bath_rooms'] = bath_rooms
+                        item['bath_rooms'] = bath_rooms
                 elif 'Etage du bien' in spans_strs:
                     floors = td.xpath('./div[2]/text()').extract_first()
                     if floors:

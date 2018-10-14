@@ -26,8 +26,6 @@ class selogerSpider(Spider):
 
     sys.setdefaultencoding('utf-8')
 
-    //////// angel headers and cookies////////////
-    --------------- Get list of proxy-----------------------#
     proxy_text = requests.get('https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list.txt').text
     list_proxy_temp = proxy_text.split('\n')
     list_proxy = []
@@ -60,7 +58,7 @@ class selogerSpider(Spider):
                 yield Request(response.urljoin(url), callback=self.final_parse)
 
             ##################_---------------- for test ----------------------##############
-            # yield Request(response.urljoin(urls[0]), callback= self.final_parse, dont_filter=True)
+            yield Request(response.urljoin(urls[0]), callback= self.final_parse, dont_filter=True)
             ###################################################################################
 
             next_page_url = response.xpath('//li[@class="btnSUIV_PREC suivant"]/a/@href').extract_first()
