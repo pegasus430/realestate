@@ -67,9 +67,10 @@ class selogerSpider(Spider):
         # if len(urls) > 0:
         for url in urls:
             if 'www.logic-immo.com' in url:
-                yield Request(url, callback=self.final_parse)
-                # yield Request('http://www.logic-immo.com/detail-location-b0673f77-1638-71da-8ae1-03cce29d8cdc.htm', self.final_parse)
-                # break
+                # yield Request(url, callback=self.final_parse)
+                yield Request('http://www.logic-immo.com/detail-location-b0673f77-1638-71da-8ae1-03cce29d8cdc.htm',
+                              self.final_parse)
+                break
 
             ##################_---------------- for test ----------------------##############
             # yield Request(response.urljoin(urls[0]), callback= self.final_parse, dont_filter=True)
