@@ -94,28 +94,28 @@ class selogerSpider(Spider):
         if agency_logo:
             item['agency_logo'] = agency_logo
 
-        attr_tags = response.xpath('//div[@class="p-4 flex flex-wrap justify-start items-start"]//div[@class="flex w-full p-2 bg-grey-lightest"]')
-        for div in attr_tags:
-            key = div.xpath('./div[@class="w-2/3 text-grey-darker mr-2"]/text()').extract_first()
-            val = div.xpath('./div[@class="w-1/3 text-grey text-right"]/text()').extract_first()
-            if 'Étage' in key:
-                item['floor'] = re.findall(r'[\d]+', str(val))[0]
-            elif 'Nbre. de chambres' in key:
-                item['rooms'] = val.strip()
-            elif 'Adresse' == key:
-                item['address'] = val.strip()
-            elif 'Nb. de pièces' in key:
-                item['pieces'] = val.strip()
-            elif 'Charges' == key:
-                item['other_charges'] = re.findall(r'[\d.,\s]+', str(val))[0].replace(' ', '')
-            elif 'Dépôt de garantie' in key:
-                item['deposit'] = re.findall(r'[\d.,\s]+', str(val))[0].replace(' ', '')
-            elif 'Honoraires' == key:
-                item['agency_fee'] = re.findall(r'[\d.,\s]+', str(val))[0].replace(' ', '')
-            elif 'Année de construction' in key:
-                item['construction_year'] = val.strip()
-            elif 'Surface habitable' in key:
-                item['size'] = re.findall(r'[\d.,\s]+', str(val))[0].replace(' ', '')
+        # attr_tags = response.xpath('//div[@class="p-4 flex flex-wrap justify-start items-start"]//div[@class="flex w-full p-2 bg-grey-lightest"]')
+        # for div in attr_tags:
+        #     key = div.xpath('./div[@class="w-2/3 text-grey-darker mr-2"]/text()').extract_first()
+        #     val = div.xpath('./div[@class="w-1/3 text-grey text-right"]/text()').extract_first()
+        #     if 'Étage' in key:
+        #         item['floor'] = re.findall(r'[\d]+', str(val))[0]
+        #     elif 'Nbre. de chambres' in key:
+        #         item['rooms'] = val.strip()
+        #     elif 'Adresse' == key:
+        #         item['address'] = val.strip()
+        #     elif 'Nb. de pièces' in key:
+        #         item['pieces'] = val.strip()
+        #     elif 'Charges' == key:
+        #         item['other_charges'] = re.findall(r'[\d.,\s]+', str(val))[0].replace(' ', '')
+        #     elif 'Dépôt de garantie' in key:
+        #         item['deposit'] = re.findall(r'[\d.,\s]+', str(val))[0].replace(' ', '')
+        #     elif 'Honoraires' == key:
+        #         item['agency_fee'] = re.findall(r'[\d.,\s]+', str(val))[0].replace(' ', '')
+        #     elif 'Année de construction' in key:
+        #         item['construction_year'] = val.strip()
+        #     elif 'Surface habitable' in key:
+        #         item['size'] = re.findall(r'[\d.,\s]+', str(val))[0].replace(' ', '')
 
 
         if 'location' in response.url:
