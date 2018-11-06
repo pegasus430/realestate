@@ -146,10 +146,10 @@ class selogerSpider(Spider):
 
 
 
-            # other_charges = response.xpath('//span[@id="valueChargeRentProperty"]/text()').re(r'[\d.,]+')
-            # if other_charges:
-            #     other_charges = ''.join(other_charges)
-            #     item['other_charges'] = other_charges.replace(',', '.')
+            other_charges = response.xpath('//span[@id="valueChargeRentProperty"]/text()').re(r'[\d.,]+')
+            if other_charges:
+                other_charges = ''.join(other_charges)
+                item['other_charges'] = other_charges.replace(',', '.')
 
             temp = response.xpath('//table[@id="table-essentials"]//tr')
             for t in temp:

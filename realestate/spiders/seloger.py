@@ -14,25 +14,26 @@ def RepresentsInt(s):
         return True
     except ValueError:
         return False
-# def download(url, destfilename, temppath):
-#     filename = temppath+'tmp'
-#     if not os.path.exists(destfilename):
-#         print "Downloading from {} to {}...".format(url, filename)
-#         try:
-#             r = requests.get(url, stream=True)
-#             with open(filename, 'wb') as f:
-#                 for chunk in r.iter_content(chunk_size=1024):
-#                     if chunk:
-#                         f.write(chunk)
-#                         f.flush()
-#
-#             with Image.open(filename) as image:
-#                 cover = resizeimage.resize_cover(image, [640, 430])
-#                 cover.save(destfilename, image.format)
-#             os.remove(filename)
-#         except Exception as e:
-#             print(e)
-#             print "Error downloading file."
+
+def download(url, destfilename, temppath):
+    filename = temppath+'tmp'
+    if not os.path.exists(destfilename):
+        print "Downloading from {} to {}...".format(url, filename)
+        try:
+            r = requests.get(url, stream=True)
+            with open(filename, 'wb') as f:
+                for chunk in r.iter_content(chunk_size=1024):
+                    if chunk:
+                        f.write(chunk)
+                        f.flush()
+
+            with Image.open(filename) as image:
+                cover = resizeimage.resize_cover(image, [640, 430])
+                cover.save(destfilename, image.format)
+            os.remove(filename)
+        except Exception as e:
+            print(e)
+            print "Error downloading file."
 
 class selogerSpider(Spider):
     name = "seloger"
@@ -59,15 +60,15 @@ class selogerSpider(Spider):
    #              'referer': 'https://www.tradecarview.com/my/favoritelist.aspx?list=1&sort=0&ps=25&&pn=0'
    #          }
 
-    # --------------- Get list of proxy-----------------------#
-    # proxy_text = requests.get('https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list.txt').text
-    # list_proxy_temp = proxy_text.split('\n')
-    # list_proxy = []
-    # for line in list_proxy_temp:
-    #     if line.strip() !='' and (line.strip()[-1] == '+' or line.strip()[-1] == '-'):
-    #         ip = line.strip().split(':')[0].replace(' ', '')
-    #         port = line.split(':')[-1].split(' ')[0]
-    #         list_proxy.append('http://'+ip+':'+port)
+    --------------- Get list of proxy-----------------------#
+    proxy_text = requests.get('https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list.txt').text
+    list_proxy_temp = proxy_text.split('\n')
+    list_proxy = []
+    for line in list_proxy_temp:
+        if line.strip() !='' and (line.strip()[-1] == '+' or line.strip()[-1] == '-'):
+            ip = line.strip().split(':')[0].replace(' ', '')
+            port = line.split(':')[-1].split(' ')[0]
+            list_proxy.append('http://'+ip+':'+port)
 
     def start_requests(self):
         # proxy = random.choice(self.list_proxy)
@@ -159,7 +160,7 @@ class selogerSpider(Spider):
             city= location
             parisian_district = None
         item['city'] = city
-        # item['parisian_district'] = parisian_district
+        item['parisian_district'] = parisian_district
         try:
             item['district'] = int(parisian_district)
         except:
@@ -272,11 +273,11 @@ class selogerSpider(Spider):
                 agency_fee= 0
             item['agency_fee'] = agency_fee
 
-            # try:
-            #     other_agency_fee= json_data["infos_acquereur"]["prix"]["honoraires_edl"]
-            # except KeyError:
-            #     other_agency_fee= 0
-            # item['other_agency_fee'] = other_agency_fee
+            try:
+                other_agency_fee= json_data["infos_acquereur"]["prix"]["honoraires_edl"]
+            except KeyError:
+                other_agency_fee= 0
+            item['other_agency_fee'] = other_agency_fee
 
             try:
                 deposit= json_data["infos_acquereur"]["prix"]["garantie"]
