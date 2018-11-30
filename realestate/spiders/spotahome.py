@@ -35,14 +35,14 @@ class selogerSpider(Spider):
 
     # //////// angel headers and cookies////////////
     # --------------- Get list of proxy-----------------------#
-    # proxy_text = requests.get('https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list.txt').text
-    # list_proxy_temp = proxy_text.split('\n')
-    # list_proxy = []
-    # for line in list_proxy_temp:
-    #     if line.strip() !='' and (line.strip()[-1] == '+' or line.strip()[-1] == '-'):
-    #         ip = line.strip().split(':')[0].replace(' ', '')
-    #         port = line.split(':')[-1].split(' ')[0]
-    #         list_proxy.append('http://'+ip+':'+port)
+    proxy_text = requests.get('https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list.txt').text
+    list_proxy_temp = proxy_text.split('\n')
+    list_proxy = []
+    for line in list_proxy_temp:
+        if line.strip() !='' and (line.strip()[-1] == '+' or line.strip()[-1] == '-'):
+            ip = line.strip().split(':')[0].replace(' ', '')
+            port = line.split(':')[-1].split(' ')[0]
+            list_proxy.append('http://'+ip+':'+port)
 
     def start_requests(self):
         proxy = random.choice(self.list_proxy)
@@ -74,20 +74,20 @@ class selogerSpider(Spider):
             time.sleep(0.3)
             yield Request(response.urljoin(url), callback=self.final_parse)
 
-        # urls = response.xpath('//div[@class="l-list__item"]/div/div/a/@href').extract()
-        # if len(urls) > 0:
-        #     for url in urls:
-        #         yield Request(response.urljoin(url), callback=self.final_parse)
-        #
-        #     ##################_---------------- for test ----------------------##############
-        #     # yield Request(response.urljoin(urls[0]), callback= self.final_parse, dont_filter=True)
-        #     ###################################################################################
-        #
-        #     next_count = response.meta['next_count'] + 1
-        #     next_page_url = response.xpath('//a[@rel="next"]/@href').extract()
-        #     if next_page_url:
-        #         next_page_url = next_page_url[0]
-        #         yield Request(response.urljoin(next_page_url), callback=self.parse, dont_filter=True, meta={"next_count": next_count})
+        urls = response.xpath('//div[@class="l-list__item"]/div/div/a/@href').extract()
+        if len(urls) > 0:
+            for url in urls:
+                yield Request(response.urljoin(url), callback=self.final_parse)
+
+            ##################_---------------- for test ----------------------##############
+            # yield Request(response.urljoin(urls[0]), callback= self.final_parse, dont_filter=True)
+            ###################################################################################
+
+            next_count = response.meta['next_count'] + 1
+            next_page_url = response.xpath('//a[@rel="next"]/@href').extract()
+            if next_page_url:
+                next_page_url = next_page_url[0]
+                yield Request(response.urljoin(next_page_url), callback=self.parse, dont_filter=True, meta={"next_count": next_count})
 
     def final_parse(self, response):
         item = RealestateItem()
