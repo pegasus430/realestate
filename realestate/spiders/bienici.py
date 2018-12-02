@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
-from scrapy import Spider, Request, FormRequest
 import sys
-import re, os, requests, urllib
-from scrapy.utils.response import open_in_browser
 import time, datetime
-from shutil import copyfile
 import json, re, random
-from realestate.items import RealestateItem
+import re, os, requests, urllib
+
+from shutil import copyfile
 from scrapy.conf import settings
 from collections import OrderedDict
+from realestate.items import RealestateItem
+from scrapy import Spider, Request, FormRequest
+from scrapy.utils.response import open_in_browser
+
 
 def RepresentsInt(s):
     try:
@@ -19,23 +21,30 @@ def RepresentsInt(s):
 
 class selogerSpider(Spider):
     name = "bienici"
-    # start_url = 'https://www.bienici.com/recherche/location/paris-75000'
-    start_url = 'https://www.bienici.com/realEstateAds.json?filters=%7B%22size%22%3A24%2C%22from%22%3A0%2C%22filterType%22%3A%22rent%22%2C%22propertyType%22%3A%5B%22house%22%2C%22flat%22%5D%2C%22page%22%3A1%2C%22resultsPerPage%22%3A24%2C%22maxAuthorizedResults%22%3A2400%2C%22sortBy%22%3A%22relevance%22%2C%22sortOrder%22%3A%22desc%22%2C%22onTheMarket%22%3A%5Btrue%5D%2C%22showAllModels%22%3Afalse%2C%22zoneIdsByTypes%22%3A%7B%22zoneIds%22%3A%5B%22-7444%22%5D%7D%7D&extensionType=extendedIfNoResult&leadingCount=2'
+    start_url = 'https://www.bienici.com/recherche/location/paris-75000'
+    start_url = 'https://www.bienici.com/realEstateAds.json?filters=%7B%22size%22%3A24%2C%22from%' \
+                '22%3A0%2C%22filterType%22%3A%22rent%22%2C%22propertyType%22%3A%5B%22house%22%2C%2' \
+                '2flat%22%5D%2C%22page%22%3A1%2C%22resultsPerPage%22%3A24%2C%22maxAuthorizedResult' \
+                's%22%3A2400%2C%22sortBy%22%3A%22relevance%22%2C%22sortOrder%22%3A%22desc%22%2C%22o' \
+                'nTheMarket%22%3A%5Btrue%5D%2C%22showAllModels%22%3Afalse%2C%22zoneIdsByTypes%22%' \
+                '3A%7B%22zoneIds%22%3A%5B%22-7444%22%5D%7D%7D&extensionType=extendedIfNoResult&lea' \
+                'dingCount=2'
     domain1 = 'https://www.bienici.com'
 
     use_selenium = False
     count = 0
     pageIndex = 1
-    totalpage= None
+    totalpage = None
     custom_settings = {
-	    'CRAWLERA_ENABLED' : False,
-        'USER_AGENT': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36',
-        "DOWNLOADER_MIDDLEWARES":{
-            'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': 400,
-            'scrapy_crawlera.CrawleraMiddleware': 610,
-            'random_useragent.RandomUserAgentMiddleware': None
+            'CRAWLERA_ENABLED': False,
+            'USER_AGENT': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, '
+                          'like Gecko) Chrome/63.0.3239.132 Safari/537.36',
+            "DOWNLOADER_MIDDLEWARES": {
+                'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': 400,
+                'scrapy_crawlera.CrawleraMiddleware': 610,
+                'random_useragent.RandomUserAgentMiddleware': None
+            }
         }
-	}
 
     def start_requests(self):
         yield Request(self.start_url, callback= self.parse, meta={"next_count": 1})
@@ -47,14 +56,17 @@ class selogerSpider(Spider):
                 item = RealestateItem()
                 item['online'] = 1
                 item['website'] = self.name
-                item['website_logo'] = 'https://www.bienici.com/cacheForever/45ee97a38fe6a64ae66c7a2310cf2192ec35f538/logos/logo_bienici.svg'
+                item['website_logo'] = 'https://www.bienici.com/cacheForever/45ee97a38fe6a64ae66' \
+                                       'c7a2310cf2192ec35f538/logos/logo_bienici.svg'
                 if 'roomsQuantity' in data.keys():
-                    item['url'] = 'https://www.bienici.com/annonce/location/{}/appartement/{}pieces/{}?q=%2Frecherche%2Flocation%2Fparis-75000'\
+                    item['url'] = 'https://www.bienici.com/annonce/location/{}/appartement/{}pie' \
+                                  'ces/{}?q=%2Frecherche%2Flocation%2Fparis-75000'\
                         .format(data['city'].strip().replace(' ', '-'), data['roomsQuantity'], data['id'])
                     item['pieces'] = data['roomsQuantity']
                     item['rooms'] = data['roomsQuantity']
                 else:
-                    item['url'] = 'https://www.bienici.com/annonce/location/{}/appartement/{}?q=%2Frecherche%2Flocation%2Fparis-75000'\
+                    item['url'] = 'https://www.bienici.com/annonce/location/{}/appartement/{}?q=%' \
+                                  '2Frecherche%2Flocation%2Fparis-75000'\
                         .format(data['city'].strip().replace(' ', '-'), data['roomsQuantity'], data['id'])
                 item['description'] = data['description']
                 item['title'] = data['title']
@@ -69,23 +81,33 @@ class selogerSpider(Spider):
                 item['city'] = data['city'].strip().split(' ')[0]
                 item['district'] = data['postalCode']
                 item['price'] = data['price']
+
                 if 'floor' in data.keys():
                     item['floor'] = data['floor']
+
                 if 'agencyRentalFee' in data.keys():
                     item['agency_fee'] = data['agencyRentalFee']
+
                 if 'safetyDeposit' in data.keys():
                     item['deposit'] = data['safetyDeposit']
+
                 if 'isFurnished' in data.keys():
                     item['furnished'] = 1
+
                 if 'yearOfConstruction' in data.keys():
                     item['construction_year'] = data['yearOfConstruction']
+
                 imgs = []
+
                 for img in data['photos']:
                     imgs.append(img['url'])
                 item['images'] = ','.join(imgs)
                 # self.count += 1
                 # print("Total Count: " + str(self.count))
-                yield Request('https://www.bienici.com/realEstateAd.json?id={}&access_token=2lWi9yZU%2FR%2FuoEAybaCQI7Q0CMe3RD5aquaK7rLs63Y%3D%3A5b543410ac93c7009bfa3572'.format(data['id']), self.final_parse, meta={'item': item})
+
+                yield Request('https://www.bienici.com/realEstateAd.json?id={}&access_token=2lWi9yZU%2FR%'
+                              '2FuoEAybaCQI7Q0CMe3RD5aquaK7rLs63Y%3D%3A5b543410ac93c7009bfa3572'
+                              .format(data['id']), self.final_parse, meta={'item': item})
                 # yield item
             except Exception as e:
                 print("err: " + e.args[0] )
@@ -98,7 +120,13 @@ class selogerSpider(Spider):
         if current < total:
             next = current+ 24
             page = int((current/24) + 1)
-            next_page_url = 'https://www.bienici.com/realEstateAds.json?filters=%7B%22size%22%3A24%2C%22from%22%3A{}%2C%22filterType%22%3A%22rent%22%2C%22propertyType%22%3A%5B%22house%22%2C%22flat%22%5D%2C%22page%22%3A{}%2C%22resultsPerPage%22%3A24%2C%22maxAuthorizedResults%22%3A2400%2C%22sortBy%22%3A%22relevance%22%2C%22sortOrder%22%3A%22desc%22%2C%22onTheMarket%22%3A%5Btrue%5D%2C%22showAllModels%22%3Afalse%2C%22zoneIdsByTypes%22%3A%7B%22zoneIds%22%3A%5B%22-7444%22%5D%7D%7D&extensionType=extendedIfNoResult&leadingCount=2'.format(next, page)
+            next_page_url = 'https://www.bienici.com/realEstateAds.json?filters=%7B%22size%22%3A24%2C%22fr' \
+                            'om%22%3A{}%2C%22filterType%22%3A%22rent%22%2C%22propertyType%22%3A%5B%22house%' \
+                            '22%2C%22flat%22%5D%2C%22page%22%3A{}%2C%22resultsPerPage%22%3A24%2C%22maxAuth' \
+                            'orizedResults%22%3A2400%2C%22sortBy%22%3A%22relevance%22%2C%22sortOrder%22%3A%' \
+                            '22desc%22%2C%22onTheMarket%22%3A%5Btrue%5D%2C%22showAllModels%22%3Afalse%2C%22z' \
+                            'oneIdsByTypes%22%3A%7B%22zoneIds%22%3A%5B%22-7444%22%5D%7D%7D&extensionType=exte' \
+                            'ndedIfNoResult&leadingCount=2'.format(next, page)
             yield Request(next_page_url, self.parse)
 
         if next_page_url:
