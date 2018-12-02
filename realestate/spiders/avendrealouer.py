@@ -17,7 +17,9 @@ def RepresentsInt(s):
 
 class selogerSpider(Spider):
     name = "avendrealouer"
-    start_url = 'https://www.avendrealouer.fr/recherche.html?pageIndex=1&sortPropertyName=ReleaseDate&sortDirection=Descending&searchTypeID=2&typeGroupCategoryID=6&transactionId=2&localityIds=3-75&typeGroupIds=47,48#o=Home'
+    start_url = 'https://www.avendrealouer.fr/recherche.html?pageIndex=1&sortPropertyName=ReleaseDate&' \
+                'sortDirection=Descending&searchTypeID=2&typeGroupCategoryID=6&transactionId=2&localit' \
+                'yIds=3-75&typeGroupIds=47,48#o=Home'
     domain1 = 'https://www.avendrealouer.fr'
 
     use_selenium = False

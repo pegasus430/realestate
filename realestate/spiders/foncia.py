@@ -25,16 +25,17 @@ class selogerSpider(Spider):
     use_selenium = False
     count = 0
     pageIndex = 1
-    totalpage= None
+    totalpage = None
     custom_settings = {
-	    'CRAWLERA_ENABLED' : False,
-        # 'USER_AGENT': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36',
-        "DOWNLOADER_MIDDLEWARES":{
-            'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': 400,
-            # 'scrapy_crawlera.CrawleraMiddleware': 610,
-            'random_useragent.RandomUserAgentMiddleware': None
+            'CRAWLERA_ENABLED' : False,
+            'USER_AGENT': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                          ' (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36',
+            "DOWNLOADER_MIDDLEWARES":{
+                'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': 400,
+                'scrapy_crawlera.CrawleraMiddleware': 610,
+                'random_useragent.RandomUserAgentMiddleware': None
+            }
         }
-	}
 
     def start_requests(self):
         yield Request(self.start_url, callback= self.parse, meta={"next_count": 1})
@@ -69,7 +70,7 @@ class selogerSpider(Spider):
                 pass
 
         type1 = response.xpath('//p[@class="Breadcrumbs-inner"]/span/text()').extract()
-        # type1 = response.url.split('/')[-3]
+        type1 = response.url.split('/')[-3]
         item['type'] = type1[1]
         item['city'] = 'Paris'
         item['district'] = response.xpath('//p[@class="OfferTop-loc"]/@data-gtm-zipcode').extract_first()
