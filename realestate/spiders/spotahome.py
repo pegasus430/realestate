@@ -52,7 +52,7 @@ class selogerSpider(Spider):
         ban_proxy = response.request.meta['proxy']
         self.list_proxy.remove(ban_proxy)
         proxy = random.choice(self.list_proxy)
-        # response.request.meta['proxy'] = proxy
+        response.request.meta['proxy'] = proxy
         print ('err proxy: ' + proxy)
         yield Request(response.request.url,
                       callback=self.parse,
@@ -127,14 +127,14 @@ class selogerSpider(Spider):
                 if avaiable_from:
                     avaiable_from = avaiable_from
 
-            # addr = response.xpath('//div[@itemprop="address"]/p/text()').extract_first()
-            # if addr:
-            #     addr = addr.split(' ')
-            #     item['city'] = addr[0]
-            #
-            #     district = response.xpath('//div[@itemprop="address"]/p/text()').re(r'[\d.,]+')
-            #     if len(district) > 1:
-            #         item['district'] = district[-1]
+            addr = response.xpath('//div[@itemprop="address"]/p/text()').extract_first()
+            if addr:
+                addr = addr.split(' ')
+                item['city'] = addr[0]
+
+                district = response.xpath('//div[@itemprop="address"]/p/text()').re(r'[\d.,]+')
+                if len(district) > 1:
+                    item['district'] = district[-1]
 
             images = response.xpath('//meta[@itemprop="image"]/@content').extract()
             if images:
@@ -146,19 +146,19 @@ class selogerSpider(Spider):
                 if new_imgs:
                     item['images'] = ','.join(new_imgs)
 
-            # area = response.xpath('//div[@class="left-panel"]//div[@class="btn btn-default btn-rounded btn-top-cover-default bold btn-shadow"]/text()').re(r'[\d.,]+')
-            # if area:
-            #     area = area[-1].replace(',', '.')
-            #     item['size'] = area
+            area = response.xpath('//div[@class="left-panel"]//div[@class="btn btn-default btn-rounded btn-top-cover-default bold btn-shadow"]/text()').re(r'[\d.,]+')
+            if area:
+                area = area[-1].replace(',', '.')
+                item['size'] = area
 
             furnished = response.xpath('//div[@class="AvailableRoomFeatures"]/text()').extract_first()
             if furnished == 'Furnished':
                 item['furnished'] = 1
 
-            # temp = response.xpath('//div[@class="left-panel"]/p/text()').extract()
-            # for t in temp:
-            #     if 'Disponibilité' in t:
-            #         avaiable_deposit = t.split(' ')[-1]
+            temp = response.xpath('//div[@class="left-panel"]/p/text()').extract()
+            for t in temp:
+                if 'Disponibilité' in t:
+                    avaiable_deposit = t.split(' ')[-1]
 
             descs = response.text.split('"description":"')
             if descs:

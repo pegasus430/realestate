@@ -24,7 +24,7 @@ class selogerSpider(Spider):
     count = 0
     pageIndex = 1
 
-    # sys.setdefaultencoding('utf-8')
+    sys.setdefaultencoding('utf-8')
 
     # //////// angel headers and cookies////////////
     # --------------- Get list of proxy-----------------------#
@@ -38,14 +38,14 @@ class selogerSpider(Spider):
             list_proxy.append('http://'+ip+':'+port)
 
     def start_requests(self):
-        # proxy = random.choice(self.list_proxy)
+        proxy = random.choice(self.list_proxy)
         yield Request(self.start_url, callback= self.parse, meta={"next_count": 1})
 
     def errCall(self, response):
         ban_proxy = response.request.meta['proxy']
         self.list_proxy.remove(ban_proxy)
         proxy = random.choice(self.list_proxy)
-        # response.request.meta['proxy'] = proxy
+        response.request.meta['proxy'] = proxy
         print ('err proxy: ' + proxy)
         yield Request(response.request.url,
                       callback=self.parse,
@@ -151,16 +151,16 @@ class selogerSpider(Spider):
                     total_floors = td.xpath('./mark[2]/text()').extract_first()
                     if total_floors:
                         total_floors = total_floors
-                        # item['toilettes'] = total_floors
+                        item['toilettes'] = total_floors
                 elif 'Nombre de salle(s) de bain/d’eau' in spans_strs:
                     bath_rooms = td.xpath('./mark[2]/text()').extract_first()
                     if bath_rooms:
                         bath_rooms = bath_rooms
-                        # item['bath_rooms'] = bath_rooms
+                        item['bath_rooms'] = bath_rooms
                 elif 'Étage' in spans_strs:
                     floors = td.xpath('./mark[2]/text()').extract_first()
                     if floors:
-                        # floors = floors[0]
+                        floors = floors[0]
                         item['floor'] = floors
 
         characteristics_tds = response.xpath('//div[@class="onusBlock onusBlock--ocom"]/ul/li')
@@ -177,11 +177,11 @@ class selogerSpider(Spider):
                     if agency_fee:
                         agency_fee = ''.join(agency_fee)
                         item['agency_fee'] = agency_fee.replace(',', '.')
-                # elif 'd\'honoraires d\'état des lieux' in spans_strs:
-                #     other_agency_fee = td.xpath('./text()').re(r'[\d.,]+')
-                #     if other_agency_fee:
-                #         other_agency_fee = ''.join(other_agency_fee)
-                #         item['other_agency_fee'] = other_agency_fee.replace(',', '.')
+                elif 'd\'honoraires d\'état des lieux' in spans_strs:
+                    other_agency_fee = td.xpath('./text()').re(r'[\d.,]+')
+                    if other_agency_fee:
+                        other_agency_fee = ''.join(other_agency_fee)
+                        item['other_agency_fee'] = other_agency_fee.replace(',', '.')
                 elif 'Provisions pour charges' in spans_strs:
                     other_charges = td.xpath('./text()').re(r'[\d.,]+')
                     if other_charges:
