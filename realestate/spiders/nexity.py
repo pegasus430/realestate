@@ -72,11 +72,11 @@ class selogerSpider(Spider):
                 if 'etage' in data['0'].keys():
                     item['floor'] = data['0']['etage']
 
-                if 'honoraires' in data['0'].keys() and data['0']['honoraires'] != 0:
-                    item['agency_fee'] = int(data['0']['honoraires'])
-                if 'honoraires_part_etat_des_lieux' in data['0'].keys() and data['0']['honoraires_part_etat_des_lieux'] != 0:
-                    item['other_charges'] = int(data['0']['honoraires_part_etat_des_lieux'])
-                    item['agency_fee'] = int(data['0']['honoraires']) - int(data['0']['honoraires_part_etat_des_lieux'])
+                # if 'honoraires' in data['0'].keys() and data['0']['honoraires'] != 0:
+                #     item['agency_fee'] = int(data['0']['honoraires'])
+                # if 'honoraires_part_etat_des_lieux' in data['0'].keys() and data['0']['honoraires_part_etat_des_lieux'] != 0:
+                #     item['other_charges'] = int(data['0']['honoraires_part_etat_des_lieux'])
+                #     item['agency_fee'] = int(data['0']['honoraires']) - int(data['0']['honoraires_part_etat_des_lieux'])
 
 
                 self.count += 1
