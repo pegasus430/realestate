@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
-from scrapy import Spider, Request, FormRequest
+
 import sys
-import re, os, requests, urllib
-from scrapy.utils.response import open_in_browser
 import time
-from shutil import copyfile
 import json, re, random
+import re, os, requests, urllib
+
+from scrapy import Spider, Request, FormRequest
+from scrapy.utils.response import open_in_browser
+from shutil import copyfile
 from realestate.items import RealestateItem
+
 
 def RepresentsInt(s):
     try:
@@ -14,6 +17,7 @@ def RepresentsInt(s):
         return True
     except ValueError:
         return False
+
 
 def download(url, destfilename, temppath):
     filename = temppath+'tmp'
@@ -35,6 +39,7 @@ def download(url, destfilename, temppath):
             print(e)
             print "Error downloading file."
 
+
 class ommiSpider(Spider):
     name = "ommi"
     start_url = 'https://www.ommi.fr/recherche/locations-paris-75-s4107978'
@@ -44,9 +49,8 @@ class ommiSpider(Spider):
     count = 0
     pageIndex = 1
 
-    # sys.setdefaultencoding('utf-8')
+    sys.setdefaultencoding('utf-8')
 
-   # //////// angel headers and cookies////////////
     headers = {
                 'Cache-Control': 'max-age=0',
                 'upgrade-insecure-requests': '1',
@@ -58,7 +62,6 @@ class ommiSpider(Spider):
                 'referer': 'https://www.tradecarview.com/my/favoritelist.aspx?list=1&sort=0&ps=25&&pn=0'
             }
 
-    # --------------- Get list of proxy-----------------------#
     proxy_text = requests.get('https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list.txt').text
     list_proxy_temp = proxy_text.split('\n')
     list_proxy = []
