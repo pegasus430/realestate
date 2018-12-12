@@ -26,10 +26,10 @@ class selogerSpider(Spider):
     pageIndex = 1
     totalpage= None
     custom_settings = {
-	    # 'CRAWLERA_ENABLED' : False,
+	    'CRAWLERA_ENABLED' : False,
         'USER_AGENT': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36',
         "DOWNLOADER_MIDDLEWARES":{
-            # 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': 400,
+            'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': 400,
             'scrapy_crawlera.CrawleraMiddleware': 610,
             'random_useragent.RandomUserAgentMiddleware': None
         }
@@ -50,6 +50,7 @@ class selogerSpider(Spider):
             item['online'] = 1
             item['website'] = self.name
             item['website_logo'] = 'http://www.laforet.com/sites/default/themes/laforet/logo.png'
+
             try:
                 item['description'] = data_json['description']
             except:
