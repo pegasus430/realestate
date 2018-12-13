@@ -17,35 +17,35 @@ def RepresentsInt(s):
 
 class selogerSpider(Spider):
     name = "explorimmo"
-    start_url = 'https://www.explorimmo.com/resultat/annonces.html?transaction=location&location=Paris&priceMax=&type=maison%2Cvilla%2Cferme%2Cmoulin%2Cchalet&type=appartement%2Cchambre&type=atelier%2Cloft%2Cduplex&type=hotel+particulier%2C+propriete%2Cchateau%2Cmanoir&roomMin=&fromSearchButton='
+    start_url = 'https://www.explorimmo.com/resultat/annonces.html?transaction=location&location=Paris&priceMax=&type=' \
+                'maison%2Cvilla%2Cferme%2Cmoulin%2Cchalet&type=appartement%2Cchambre&type=atelier%2Cloft%2Cduplex&type' \
+                '=hotel+particulier%2C+propriete%2Cchateau%2Cmanoir&roomMin=&fromSearchButton='
     domain1 = 'https://www.explorimmo.com'
 
     use_selenium = False
     count = 0
     pageIndex = 1
 
-    # sys.setdefaultencoding('utf-8')
+    sys.setdefaultencoding('utf-8')
 
-    # //////// angel headers and cookies////////////
-    # --------------- Get list of proxy-----------------------#
     proxy_text = requests.get('https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list.txt').text
     list_proxy_temp = proxy_text.split('\n')
     list_proxy = []
     for line in list_proxy_temp:
-        if line.strip() !='' and (line.strip()[-1] == '+' or line.strip()[-1] == '-'):
+        if line.strip() != '' and (line.strip()[-1] == '+' or line.strip()[-1] == '-'):
             ip = line.strip().split(':')[0].replace(' ', '')
             port = line.split(':')[-1].split(' ')[0]
             list_proxy.append('http://'+ip+':'+port)
 
     def start_requests(self):
-        # proxy = random.choice(self.list_proxy)
+        proxy = random.choice(self.list_proxy)
         yield Request(self.start_url, callback= self.parse, meta={"next_count": 1})
 
     def errCall(self, response):
         ban_proxy = response.request.meta['proxy']
         self.list_proxy.remove(ban_proxy)
         proxy = random.choice(self.list_proxy)
-        # response.request.meta['proxy'] = proxy
+        response.request.meta['proxy'] = proxy
         print ('err proxy: ' + proxy)
         yield Request(response.request.url,
                       callback=self.parse,
@@ -56,19 +56,22 @@ class selogerSpider(Spider):
     def parse(self, response):
         urls = response.xpath('//h2[@class="item-type js-item-title"]/a/@href').extract()
         if len(urls) > 0:
-            # proxy = response.meta['proxy']
+            proxy = response.meta['proxy']
             for url in urls:
                 if '.html' in url:
                     yield Request(response.urljoin(url), callback=self.final_parse)
 
-            ##################_---------------- for test ----------------------##############
             # yield Request(response.urljoin(urls[0]), callback= self.final_parse, dont_filter=True)
-            ###################################################################################
 
-            main_url = '/annonces/resultat/annonces.html?transaction=location&type=Maison&type=Villa&type=Ferme&type=Moulin&type=Chalet&type=Appartement&type=Chambre&type=Atelier&type=Loft&type=Duplex&type=H%F4tel%20particulier&type=Propri%E9t%E9&type=Ch%E2teau&type=Manoir&location=paris&page={}'
+            main_url = '/annonces/resultat/annonces.html?transaction=location&type=Maison&type=Villa&type=Ferme&type=' \
+                       'Moulin&type=Chalet&type=Appartement&type=Chambre&type=Atelier&type=Loft&type=Duplex&type=H%F4' \
+                       'tel%20particulier&type=Propri%E9t%E9&type=Ch%E2teau&type=Manoir&location=paris&page={}'
             next_count = response.meta["next_count"] + 1
             next_page_url = main_url.format(next_count)
-            yield Request(response.urljoin(next_page_url), callback=self.parse, dont_filter=True, meta={"next_count": next_count})
+            yield Request(response.urljoin(next_page_url),
+                          callback=self.parse,
+                          dont_filter=True,
+                          meta={"next_count": next_count})
 
     def final_parse(self, response):
         item = RealestateItem()
@@ -182,12 +185,12 @@ class selogerSpider(Spider):
                     bath_rooms = td.xpath('./text()').re(r'[\d.,]+')
                     if bath_rooms:
                         bath_rooms = bath_rooms[0]
-                        # item['rooms'] = rooms
-                # elif 'Toilettes:' in spans_strs:
-                #     toilettes = td.xpath('./text()').re(r'[\d.,]+')
-                #     if toilettes:
-                #         toilettes = toilettes[0]
-                #         # item['toilettes'] = toilettes
+                        item['rooms'] = rooms
+                elif 'Toilettes:' in spans_strs:
+                    toilettes = td.xpath('./text()').re(r'[\d.,]+')
+                    if toilettes:
+                        toilettes = toilettes[0]
+                        # item['toilettes'] = toilettes
                 elif 'étage' in spans_strs:
                     floors = td.xpath('./text()').re(r'[\d.,]+')
                     if floors:
@@ -197,12 +200,12 @@ class selogerSpider(Spider):
                     furnished = 1
                 else:
                     furnished = 0
-                    # furnished = td.xpath('./text()').extract_first()
-                    # if furnished:
-                    #     if 'Non' in furnished:
-                    #         furnished = 0
-                    #     else:
-                    #         furnished = 1
+                    furnished = td.xpath('./text()').extract_first()
+                    if furnished:
+                        if 'Non' in furnished:
+                            furnished = 0
+                        else:
+                            furnished = 1
                 item['furnished'] = furnished
 
         rent = "rent"
