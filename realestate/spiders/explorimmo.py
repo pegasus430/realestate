@@ -61,7 +61,7 @@ class selogerSpider(Spider):
                 if '.html' in url:
                     yield Request(response.urljoin(url), callback=self.final_parse)
 
-            # yield Request(response.urljoin(urls[0]), callback= self.final_parse, dont_filter=True)
+            yield Request(response.urljoin(urls[0]), callback= self.final_parse, dont_filter=True)
 
             main_url = '/annonces/resultat/annonces.html?transaction=location&type=Maison&type=Villa&type=Ferme&type=' \
                        'Moulin&type=Chalet&type=Appartement&type=Chambre&type=Atelier&type=Loft&type=Duplex&type=H%F4' \
