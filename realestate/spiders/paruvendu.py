@@ -18,7 +18,9 @@ def RepresentsInt(s):
 
 class selogerSpider(Spider):
     name = "paruvendu"
-    start_url = 'https://www.paruvendu.fr/immobilier/annonceimmofo/liste/listeAnnonces?tt=5&tbApp=1&tbDup=1&tbChb=1&tbLof=1&tbAtl=1&tbPla=1&tbMai=1&tbVil=1&tbCha=1&tbPro=1&tbHot=1&tbMou=1&tbFer=1&at=1&nbp0=99&pa=FR&lo=75&lol=0&ray=50'
+    start_url = 'https://www.paruvendu.fr/immobilier/annonceimmofo/liste/listeAnnonces?tt=5&tbApp=1&tbDup=' \
+                '1&tbChb=1&tbLof=1&tbAtl=1&tbPla=1&tbMai=1&tbVil=1&tbCha=1&tbPro=1&tbHot=1&tbMou=1&tbFer=1' \
+                '&at=1&nbp0=99&pa=FR&lo=75&lol=0&ray=50'
     domain1 = 'https://www.paruvendu.fr'
 
     use_selenium = False
@@ -27,15 +29,15 @@ class selogerSpider(Spider):
     totalpage= None
 
     custom_settings = {
-	    'CRAWLERA_ENABLED': False,
-        'USER_AGENT': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
-                      'Chrome/63.0.3239.132 Safari/537.36',
-        "DOWNLOADER_MIDDLEWARES":{
-            'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': 400,
-            'scrapy_crawlera.CrawleraMiddleware': 610,
-            'random_useragent.RandomUserAgentMiddleware': None
+            'CRAWLERA_ENABLED': False,
+            'USER_AGENT': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
+                          'Chrome/63.0.3239.132 Safari/537.36',
+            "DOWNLOADER_MIDDLEWARES":{
+                'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': 400,
+                'scrapy_crawlera.CrawleraMiddleware': 610,
+                'random_useragent.RandomUserAgentMiddleware': None
+            }
         }
-	}
 
     def start_requests(self):
         yield Request(self.start_url, callback= self.parse, meta={"next_count": 1})
